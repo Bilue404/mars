@@ -68,40 +68,6 @@ void log_formater(const XLoggerInfo* _info, const char* _logbody, PtrBuffer& _lo
         return;
     }
 
-    if (NULL != _info) {
-        const char* filename = ExtractFileName(_info->filename);
-        char strFuncName [128] = {0};
-        ExtractFunctionName(_info->func_name, strFuncName, sizeof(strFuncName));
-
-        char temp_time[64] = {0};
-
-        if (0 != _info->timeval.tv_sec) {
-            time_t sec = _info->timeval.tv_sec;
-            tm tm = *localtime((const time_t*)&sec);
-#ifdef ANDROID
-            snprintf(temp_time, sizeof(temp_time), "%d-%02d-%02d %+.1f %02d:%02d:%02d.%.3ld", 1900 + tm.tm_year, 1 + tm.tm_mon, tm.tm_mday,
-                     tm.tm_gmtoff / 3600.0, tm.tm_hour, tm.tm_min, tm.tm_sec, _info->timeval.tv_usec / 1000);
-#elif _WIN32
-            snprintf(temp_time, sizeof(temp_time), "%d-%02d-%02d %+.1f %02d:%02d:%02d.%.3d", 1900 + tm.tm_year, 1 + tm.tm_mon, tm.tm_mday,
-                     (-_timezone) / 3600.0, tm.tm_hour, tm.tm_min, tm.tm_sec, _info->timeval.tv_usec / 1000);
-#else
-            snprintf(temp_time, sizeof(temp_time), "%d-%02d-%02d %+.1f %02d:%02d:%02d.%.3d", 1900 + tm.tm_year, 1 + tm.tm_mon, tm.tm_mday,
-                     tm.tm_gmtoff / 3600.0, tm.tm_hour, tm.tm_min, tm.tm_sec, _info->timeval.tv_usec / 1000);
-#endif
-        }
-
-        // _log.AllocWrite(30*1024, false);
-        int ret = snprintf((char*)_log.PosPtr(), 1024, "[%s][%s][%" PRIdMAX ", %" PRIdMAX "%s][%s][%s, %s, %d][",  // **CPPLINT SKIP**
-                           _logbody ? levelStrings[_info->level] : levelStrings[kLevelFatal], temp_time,
-                           _info->pid, _info->tid, _info->tid == _info->maintid ? "*" : "", _info->tag ? _info->tag : "",
-                           filename, strFuncName, _info->line);
-
-        assert(0 <= ret);
-        _log.Length(_log.Pos() + ret, _log.Length() + ret);
-        //      memcpy((char*)_log.PosPtr() + 1, "\0", 1);
-
-        assert((unsigned int)_log.Pos() == _log.Length());
-    }
 
     if (NULL != _logbody) {
         // in android 64bit, in strnlen memchr,  const unsigned char*  end = p + n;  > 4G!!!!! in stack array
