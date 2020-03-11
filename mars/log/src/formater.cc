@@ -68,6 +68,19 @@ void log_formater(const XLoggerInfo* _info, const char* _logbody, PtrBuffer& _lo
         return;
     }
 
+ if (NULL != _info) {
+        
+
+        // _log.AllocWrite(30*1024, false);
+        int ret = snprintf((char*)_log.PosPtr(), 1024, "[%s][%s]",  // **CPPLINT SKIP**
+                           _logbody ? levelStrings[_info->level] : levelStrings[kLevelFatal],_info->tag ? _info->tag : "");
+
+        assert(0 <= ret);
+        _log.Length(_log.Pos() + ret, _log.Length() + ret);
+        //      memcpy((char*)_log.PosPtr() + 1, "\0", 1);
+
+        assert((unsigned int)_log.Pos() == _log.Length());
+    }
 
     if (NULL != _logbody) {
         // in android 64bit, in strnlen memchr,  const unsigned char*  end = p + n;  > 4G!!!!! in stack array
