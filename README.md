@@ -1,6 +1,6 @@
 ## XLOG 日志格式
 
-原有的XLOG 写入日志是会附带很多版本信息，方便xlog出问题时快速定位。
+原有的XLOG 写入日志时会附带很多版本信息，方便xlog出问题时快速定位。
 
 ```
 ^^^^^^^^^^Oct 14 2019^^^20:27:59^^^^^^^^^^[28682,28682][2020-03-10 +0800 18:09:56]
@@ -36,6 +36,7 @@ log dir space info, capacity:56457412608 free:34091675648 available:34091675648
 
 
 环境： python2.7 ， cmake，NDK (配置NDK_ROOT变量)
+
 编译： python2.7 build_android.py 
 
 
