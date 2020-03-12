@@ -1,3 +1,45 @@
+## XLOG 日志格式
+
+原有的XLOG 写入日志是会附带很多版本信息，方便xlog出问题时快速定位。
+
+```
+^^^^^^^^^^Oct 14 2019^^^20:27:59^^^^^^^^^^[28682,28682][2020-03-10 +0800 18:09:56]
+get mmap time: 0
+MARS_URL: 
+MARS_PATH: master
+MARS_REVISION: 85b19f92
+MARS_BUILD_TIME: 2019-10-14 20:27:57
+MARS_BUILD_JOB: 
+log appender mode:1, use mmap:1
+cache dir space info, capacity:56478384128 free:35094179840 available:34112712704
+log dir space info, capacity:56457412608 free:34091675648 available:34091675648
+[I][2020-03-10 +8.0 18:10:11.673][28448, 28448][Logger_TAG][, , 0][Test_LOG
+[D][2020-03-10 +8.0 18:10:11.674][28448, 28448][Logger_TAG][, , 0][Test_LOG
+[E][2020-03-10 +8.0 18:10:11.674][28448, 28448][Logger_TAG][, , 0][Test_LOG
+```
+
+
+
+简单的日志采集暂时不需要那么多详细的信息。只需要知道BUG的路径。
+
+所以去除了编译信息，以及默认的日志格式。
+
+只保留日志 LEVEL 和 TAG 。 如下
+
+```
+[I][Logger_TAG]Test_LOG
+[D][Logger_TAG]Test_LOG
+[E][Logger_TAG]Test_LOG
+
+```
+
+
+
+环境： python2.7 ， cmake，NDK (配置NDK_ROOT变量)
+编译： python2.7 build_android.py 
+
+
+
 ## Mars
 
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://github.com/Tencent/mars/blob/master/LICENSE)
